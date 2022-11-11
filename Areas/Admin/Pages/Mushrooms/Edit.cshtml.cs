@@ -10,7 +10,7 @@ using Serilog;
 using System.Data;
 using MushroomWebsite.Repository.IRepository;
 
-namespace MushroomWebsite.Pages.Mushrooms
+namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
 {
     public class EditModel : PageModel
     {

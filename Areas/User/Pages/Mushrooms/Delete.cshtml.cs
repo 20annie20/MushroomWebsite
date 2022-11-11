@@ -10,18 +10,18 @@ using Serilog;
 using System.Data;
 using MushroomWebsite.Repository.IRepository;
 
-namespace MushroomWebsite.Pages.Mushrooms
+namespace MushroomWebsite.Areas.User.Pages.Mushrooms
 {
-    public class EditModel : PageModel
+    public class DeleteModel : PageModel
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        readonly ILogger _log = Log.ForContext<EditModel>();
+        readonly ILogger _log = Log.ForContext<DeleteModel>();
 
         [BindProperty]
         public Mushroom Mushroom { get; set; }
 
-        public EditModel(IUnitOfWork unitOfWork)
+        public DeleteModel(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -36,18 +36,19 @@ namespace MushroomWebsite.Pages.Mushrooms
             {
                 _log.Error(ex.ToString());
             }
-            
+
         }
 
         public async Task<IActionResult> OnPost()
         {
             try
             {
-                if(ModelState.IsValid)
+                var mushroomFromDb = _unitOfWork.Mushroom.GetFirstOrDefault(u=>u.Id==Mushroom.Id);
+                if (mushroomFromDb != null)
                 {
-                    _unitOfWork.Mushroom.Update(Mushroom);
+                    _unitOfWork.Mushroom.Remove(mushroomFromDb);
                     _unitOfWork.Save();
-                    _log.Information("Mushroom updated");
+                    _log.Information("Mushroom deleted");
                     return RedirectToPage("Index");
                 }
                 return Page();

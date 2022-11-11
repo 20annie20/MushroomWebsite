@@ -10,44 +10,40 @@ using Serilog;
 using System.Data;
 using MushroomWebsite.Repository.IRepository;
 
-namespace MushroomWebsite.Pages.Mushrooms
+namespace MushroomWebsite.Areas.User.Pages.Mushrooms
 {
-    public class EditModel : PageModel
+    public class CreateModel : PageModel
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        readonly ILogger _log = Log.ForContext<EditModel>();
+        readonly ILogger _log = Log.ForContext<CreateModel>();
 
         [BindProperty]
         public Mushroom Mushroom { get; set; }
 
-        public EditModel(IUnitOfWork unitOfWork)
+        public CreateModel(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public void OnGet(int id)
+        public void OnGet()
         {
-            try
-            {
-                Mushroom = _unitOfWork.Mushroom.GetFirstOrDefault(u=>u.Id==id);
-            }
-            catch (Exception ex)
-            {
-                _log.Error(ex.ToString());
-            }
-            
         }
 
         public async Task<IActionResult> OnPost()
         {
             try
             {
+                if(_unitOfWork.Mushroom.GetAll().Any(contact => contact.Name.Equals(Mushroom.Name)))
+                {
+                    ModelState.AddModelError("Mushroom.Name", "Taki grzyb już istnieje w bazie");
+                }
+
                 if(ModelState.IsValid)
                 {
-                    _unitOfWork.Mushroom.Update(Mushroom);
+                    _unitOfWork.Mushroom.Add(Mushroom);
                     _unitOfWork.Save();
-                    _log.Information("Mushroom updated");
+                    _log.Information("Mushroom added");
                     return RedirectToPage("Index");
                 }
                 return Page();

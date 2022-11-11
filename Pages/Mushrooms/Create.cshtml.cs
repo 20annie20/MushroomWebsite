@@ -8,22 +8,22 @@ using MushroomWebsite.Models;
 using MushroomWebsite.Data;
 using Serilog;
 using System.Data;
-
+using MushroomWebsite.Repository.IRepository;
 
 namespace MushroomWebsite.Pages.Mushrooms
 {
     public class CreateModel : PageModel
     {
 
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         readonly ILogger _log = Log.ForContext<EditModel>();
 
         [BindProperty]
         public Mushroom Mushroom { get; set; }
 
-        public CreateModel(ApplicationDbContext db)
+        public CreateModel(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public void OnGet()
@@ -34,15 +34,15 @@ namespace MushroomWebsite.Pages.Mushrooms
         {
             try
             {
-                if(_db.Mushrooms.Any(contact => contact.Name.Equals(Mushroom.Name)))
+                if(_unitOfWork.Mushroom.GetAll().Any(contact => contact.Name.Equals(Mushroom.Name)))
                 {
                     ModelState.AddModelError("Mushroom.Name", "Taki grzyb już istnieje w bazie");
                 }
 
                 if(ModelState.IsValid)
                 {
-                    await _db.Mushrooms.AddAsync(Mushroom);
-                    await _db.SaveChangesAsync();
+                    _unitOfWork.Mushroom.Add(Mushroom);
+                    _unitOfWork.Save();
                     _log.Information("Mushroom added");
                     return RedirectToPage("Index");
                 }

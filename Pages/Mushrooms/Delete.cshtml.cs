@@ -8,29 +8,29 @@ using MushroomWebsite.Models;
 using MushroomWebsite.Data;
 using Serilog;
 using System.Data;
-
+using MushroomWebsite.Repository.IRepository;
 
 namespace MushroomWebsite.Pages.Mushrooms
 {
     public class DeleteModel : PageModel
     {
 
-        private readonly ApplicationDbContext _db;
+        private readonly IUnitOfWork _unitOfWork;
         readonly ILogger _log = Log.ForContext<EditModel>();
 
         [BindProperty]
         public Mushroom Mushroom { get; set; }
 
-        public DeleteModel(ApplicationDbContext db)
+        public DeleteModel(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
 
         public void OnGet(int id)
         {
             try
             {
-                Mushroom = _db.Mushrooms.Find(id);
+                Mushroom = _unitOfWork.Mushroom.GetFirstOrDefault(u=>u.Id==id);
             }
             catch (Exception ex)
             {
@@ -43,11 +43,11 @@ namespace MushroomWebsite.Pages.Mushrooms
         {
             try
             {
-                var mushroomFromDb = _db.Mushrooms.Find(Mushroom.Id);
+                var mushroomFromDb = _unitOfWork.Mushroom.GetFirstOrDefault(u=>u.Id==Mushroom.Id);
                 if (mushroomFromDb != null)
                 {
-                    _db.Mushrooms.Remove(mushroomFromDb);
-                    await _db.SaveChangesAsync();
+                    _unitOfWork.Mushroom.Remove(mushroomFromDb);
+                    _unitOfWork.Save();
                     _log.Information("Mushroom deleted");
                     return RedirectToPage("Index");
                 }
