@@ -10,6 +10,9 @@ namespace MushroomWebsite.Models
     {
         [Key]
         public int Id { get; set; }
+
+        [Required]
+        [StringLength(512)]
         public string Name { get; set; }
 
         [StringLength(1024)]

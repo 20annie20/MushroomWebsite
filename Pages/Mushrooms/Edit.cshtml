@@ -1,11 +1,12 @@
 ﻿@page
-@model MushroomWebsite.Pages.Mushrooms.CreateModel
+@model MushroomWebsite.Pages.Mushrooms.EditModel
 
 <form method="post">
+    <input hidden asp-for="Mushroom.Id"/>
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-dark pl-3">Formularz nowego grzyba</h2>
-            <hr />
+            <h2 class="text-dark pl-3">Formularz edycji grzyba</h2>
+            <hr/>
         </div>
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-3">

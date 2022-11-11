@@ -6,34 +6,47 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h2 class="text-dark">Grzybki</h2>
+            <h2 class="text-dark">Spis grzybów</h2>
         </div>
         <div class="col">
             <a asp-page="create" class="btn btn-primary text-white;" style="background-color: #405018;">
-                Stwórz nowego grzyba
+                Dodaj nowy grzyb
             </a>
         </div>
     </div>
-    <br/>
+    <br />
 
     <table class="table table-bordered table-striped" style="100%">
         <thead>
-            <th>
-                Nazwa
-            </th>
-            <th>
-                Czy truje:
-            </th>
+            <tr>
+                <th>
+                    Nazwa
+                </th>
+                <th>
+                    Czy truje:
+                </th>
+                <th></th>
+            </tr>
         </thead>
-            <tbody>
-                @foreach (var obj in Model.Mushrooms)
-                {
-                    <tr>
-                        <td width="50%">@obj.Name</td>
-                        <td width="50%">@obj.IsPoisonous</td>
-                    </tr>
-                }
-
-            </tbody>
+        <tbody>
+            @foreach (var obj in Model.Mushrooms)
+             {
+                <tr>
+                    <td width="40%">@obj.Name</td>
+                    <td width="20%">@obj.IsPoisonous</td>
+                    <td>
+                        <a asp-page="Details" asp-route-id="@obj.Id" class="btn btn-primary mx-2 text-white;" style="background-color: #405018;">
+                            Zobacz
+                        </a>
+                        <a asp-page="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2 text-white;" style="background-color: #405018;">
+                            Zmień dane
+                        </a>
+                        <a asp-page="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2;">
+                            Usuń
+                        </a>
+                    </td>
+                </tr>
+             }
+        </tbody>
     </table>
 </div>

@@ -12,7 +12,7 @@ using System.Data;
 
 namespace MushroomWebsite.Pages.Mushrooms
 {
-    public class CreateModel : PageModel
+    public class EditModel : PageModel
     {
 
         private readonly ApplicationDbContext _db;
@@ -21,29 +21,33 @@ namespace MushroomWebsite.Pages.Mushrooms
         [BindProperty]
         public Mushroom Mushroom { get; set; }
 
-        public CreateModel(ApplicationDbContext db)
+        public EditModel(ApplicationDbContext db)
         {
             _db = db;
         }
 
-        public void OnGet()
+        public void OnGet(int id)
         {
+            try
+            {
+                Mushroom = _db.Mushrooms.Find(id);
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.ToString());
+            }
+            
         }
 
         public async Task<IActionResult> OnPost()
         {
             try
             {
-                if(_db.Mushrooms.Any(contact => contact.Name.Equals(Mushroom.Name)))
-                {
-                    ModelState.AddModelError("Mushroom.Name", "Taki grzyb już istnieje w bazie");
-                }
-
                 if(ModelState.IsValid)
                 {
-                    await _db.Mushrooms.AddAsync(Mushroom);
+                    _db.Mushrooms.Update(Mushroom);
                     await _db.SaveChangesAsync();
-                    _log.Information("Mushroom added");
+                    _log.Information("Mushroom updated");
                     return RedirectToPage("Index");
                 }
                 return Page();

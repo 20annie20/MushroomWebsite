@@ -1,13 +1,13 @@
 ﻿@page
-@model MushroomWebsite.Pages.Mushrooms.CreateModel
+@model MushroomWebsite.Pages.Mushrooms.DeleteModel
 
 <form method="post">
+    <input hidden asp-for="Mushroom.Id"/>
     <div class="border p-3 mt-4">
         <div class="row pb-2">
-            <h2 class="text-dark pl-3">Formularz nowego grzyba</h2>
-            <hr />
+            <h2 class="text-dark pl-3">Usuwanie grzyba</h2>
+            <hr/>
         </div>
-        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-3">
             <label asp-for="Mushroom.Name">Nazwa</label>
             <input asp-for="Mushroom.Name" class="form-control">
@@ -21,7 +21,7 @@
             <label asp-for="Mushroom.IsPoisonous">Czy jest trujący:</label>
             <input asp-for="Mushroom.IsPoisonous" class="form-control col-sm-1">
         </div>
-        <button type="submit" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Zatwierdź</button>
+        <button type="submit" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Usuń</button>
         <a asp-page="Index" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Powrót</a>
     </div>
 </form>
