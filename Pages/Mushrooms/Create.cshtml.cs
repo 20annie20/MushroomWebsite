@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MushroomWebsite.Models;
 using MushroomWebsite.Data;
+using Serilog;
+using System.Data;
+
 
 namespace MushroomWebsite.Pages.Mushrooms
 {
@@ -13,6 +16,8 @@ namespace MushroomWebsite.Pages.Mushrooms
     {
 
         private readonly ApplicationDbContext _db;
+        readonly ILogger _log = Log.ForContext<CreateModel>();
+
         [BindProperty]
         public Mushroom Mushroom { get; set; }
 
@@ -27,8 +32,17 @@ namespace MushroomWebsite.Pages.Mushrooms
 
         public async Task<IActionResult> OnPost()
         {
-            await _db.Mushrooms.AddAsync(Mushroom);
-            await _db.SaveChangesAsync();
+            try
+            {
+                await _db.Mushrooms.AddAsync(Mushroom);
+                await _db.SaveChangesAsync();
+                _log.Information("Mushroom added");
+            }
+            catch (Exception ex)
+            {
+                _log.Error(ex.ToString());
+            }
+            
             return RedirectToPage("Index");
         }
     }

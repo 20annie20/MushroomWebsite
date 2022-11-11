@@ -7,11 +7,21 @@ using MushroomWebsite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System;
+using Microsoft.Extensions.Logging;
+using MushroomWebsite.Models;
+
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
 
 namespace MushroomWebsite
 {
     public class Startup
     {
+
+        private const string _connectionStringName = "DefaultConnection";
+        private const string _schemaName = "dbo";
+        private const string _tableName = "LogEvents";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,14 +35,33 @@ namespace MushroomWebsite
             services.AddRazorPages();
 
             services.AddControllers();
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationDbContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            var columnOptionsSection = Configuration.GetSection("Serilog:ColumnOptions");
+            var sinkOptionsSection = Configuration.GetSection("Serilog:SinkOptions");
+
+            Log.Logger = new LoggerConfiguration()
+               .WriteTo.MSSqlServer(
+                   connectionString: _connectionStringName,
+                   sinkOptions: new MSSqlServerSinkOptions
+                   {
+                       TableName = _tableName,
+                       SchemaName = _schemaName,
+                       AutoCreateSqlTable = true
+                   },
+                   sinkOptionsSection: sinkOptionsSection,
+                   appConfiguration: Configuration,
+                   columnOptionsSection: columnOptionsSection)
+               .CreateLogger();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -54,6 +83,7 @@ namespace MushroomWebsite
             {
                 endpoints.MapRazorPages();
             });
+            
         }
     }
 }

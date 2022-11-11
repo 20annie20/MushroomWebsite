@@ -1,19 +1,27 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MushroomWebsite.Models;
 
 
 namespace MushroomWebsite.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+    public class ApplicationDbContext : DbContext
     {
 
         public DbSet<Article> Articles { get; set; }
         public DbSet<Mushroom> Mushrooms { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<User> Users { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().Property(c => c.Email).IsRequired();
+            modelBuilder.Entity<User>().Property(c => c.Name).IsRequired();
+            modelBuilder.Entity<Role>().Property(c => c.Name).IsRequired();
+            modelBuilder.Entity<Mushroom>().Property(c => c.Name).IsRequired();
         }
     }
 }
