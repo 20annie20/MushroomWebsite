@@ -1,0 +1,39 @@
+﻿@page
+@model MushroomWebsite.Pages.Mushrooms.IndexModel
+@{
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2 class="text-dark">Grzybki</h2>
+        </div>
+        <div class="col">
+            <a asp-page="create" class="btn btn-primary text-white;" style="background-color: #405018;">
+                Stwórz nowego grzyba
+            </a>
+        </div>
+    </div>
+    <br/>
+
+    <table class="table table-bordered table-striped" style="100%">
+        <thead>
+            <th>
+                Nazwa
+            </th>
+            <th>
+                Czy truje:
+            </th>
+        </thead>
+            <tbody>
+                @foreach (var obj in Model.Mushrooms)
+                {
+                    <tr>
+                        <td width="50%">@obj.Name</td>
+                        <td width="50%">@obj.IsPoisonous</td>
+                    </tr>
+                }
+
+            </tbody>
+    </table>
+</div>
