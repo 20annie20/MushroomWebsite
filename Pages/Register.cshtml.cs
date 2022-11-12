@@ -65,7 +65,7 @@ namespace MushroomWebsite.Pages
 
                     _unitOfWork.User.Add(newUser);
                     _unitOfWork.Save();
-                    return RedirectToPage("./Mushrooms/Create");
+                    return RedirectToPage("/Index");
                 }             
             }
             catch (Exception ex)
