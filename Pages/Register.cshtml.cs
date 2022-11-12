@@ -57,7 +57,6 @@ namespace MushroomWebsite.Pages
                         Email = UserData.Email,
                         Name = UserData.Name,
                         RoleId = 2,
-                        Role = _unitOfWork.Role.GetFirstOrDefault(c => c.Id.Equals(2)),
                     };
 
                     var hashed = _hasher.HashPassword(newUser, UserData.Password);

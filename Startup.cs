@@ -13,12 +13,14 @@ using Serilog.Sinks.MSSqlServer;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication;
 using System.Text;
 
 using MushroomWebsite.Data;
 using MushroomWebsite.Models;
 using MushroomWebsite.Repository;
 using MushroomWebsite.Repository.IRepository;
+using Microsoft.AspNetCore.Http;
 
 namespace MushroomWebsite
 {
@@ -39,31 +41,30 @@ namespace MushroomWebsite
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(auth =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
             {
-                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-             .AddJwtBearer(options =>
-             {
-                 options.TokenValidationParameters = new TokenValidationParameters
-                 {
-                     ValidateIssuer = true,
-                     ValidateAudience = true,
-                     ValidateLifetime = true,
-                     ValidateIssuerSigningKey = true,
-                     ValidIssuer = Configuration["Jwt:Issuer"],
-                     ValidAudience = Configuration["Jwt:Issuer"],
-                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                 };
-             });
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });
 
             services.AddRazorPages(options=>
             {
-                //options.Conventions.AuthorizeAreaFolder("User", "/");
+                options.Conventions.AuthorizeAreaFolder("User", "/");
                 options.Conventions.AuthorizeAreaFolder("Admin", "/");
                 options.Conventions.AllowAnonymousToFolder("/");
             });
 
+            services.AddSession();
+            
             services.AddControllers();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
@@ -103,6 +104,17 @@ namespace MushroomWebsite
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseSession();
+            app.Use(async (context, next) =>
+            {
+                var token = context.Session.GetString("Token");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                }
+                await next();
+            });
 
             app.UseAuthentication();
             app.UseHttpsRedirection();
