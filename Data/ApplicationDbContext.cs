@@ -20,6 +20,7 @@ namespace MushroomWebsite.Data
         {
             modelBuilder.Entity<User>().Property(c => c.Email).IsRequired();
             modelBuilder.Entity<User>().Property(c => c.Name).IsRequired();
+            modelBuilder.Entity<User>().Property(c => c.PasswordHash).IsRequired();
             modelBuilder.Entity<Role>().Property(c => c.Name).IsRequired();
             modelBuilder.Entity<Mushroom>().Property(c => c.Name).IsRequired();
         }

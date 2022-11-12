@@ -1,0 +1,41 @@
+﻿@page
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Rejestracja";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            <form id="account" method="post">
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-floating">
+                    <input asp-for="UserData.Name" class="form-control" aria-required="true" />
+                    <label asp-for="UserData.Name" class="form-label"></label>
+                    <span asp-validation-for="UserData.Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="UserData.Email" class="form-control" autocomplete="mail" aria-required="true" />
+                    <label asp-for="UserData.Email" class="form-label"></label>
+                    <span asp-validation-for="UserData.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="UserData.Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="UserData.Password" class="form-label"></label>
+                    <span asp-validation-for="UserData.Password" class="text-danger"></span>
+                </div>
+                <div>
+                    <button asp-area="User" id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Zarejestruj</button>
+                </div>
+                <div>
+                    <p>
+                        <a asp-page="Index">Powrót do logowania</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

@@ -1,10 +1,36 @@
 ﻿@page
 @model IndexModel
+
 @{
-    ViewData["Title"] = "Witaj";
+    ViewData["Title"] = "Logowanie";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Witaj w świecie grzybów</h1>
-    <p>Grzyby.</p>
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            <form id="account" method="post">
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-floating">
+                    <input asp-for="UserData.Name" class="form-control" autocomplete="username" aria-required="true" />
+                    <label asp-for="UserData.Name" class="form-label"></label>
+                    <span asp-validation-for="UserData.Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <input asp-for="UserData.PasswordHash" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="UserData.PasswordHash" class="form-label"></label>
+                    <span asp-validation-for="UserData.PasswordHash" class="text-danger"></span>
+                </div>
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Zaloguj</button>
+                </div>
+                <div>
+                    <p>
+                        <a asp-page="./Register">Zarejestruj się</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
 </div>
