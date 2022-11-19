@@ -11,10 +11,10 @@ namespace MushroomWebsite.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public DateTime CreatedAt { get; set; }
-        [DataType(DataType.Date)]
-        public DateTime ModifiedAt { get; set; }
         [StringLength(1024)]
+        public string Title { get; set; }
+        [Required]
+        public DateTime CreatedAt { get; set; }
         public string Text { get; set; }
     }
 }
