@@ -7,8 +7,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using MushroomWebsite.Models;
 using MushroomWebsite.Data;
 using Serilog;
+using System.IO;
 using System.Data;
 using MushroomWebsite.Repository.IRepository;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+
 
 namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
 {
@@ -17,20 +21,22 @@ namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
 
         private readonly IUnitOfWork _unitOfWork;
         readonly ILogger _log = Log.ForContext<EditModel>();
+        private readonly IWebHostEnvironment _hostEnvironment;
 
         [BindProperty]
         public Mushroom Mushroom { get; set; }
 
-        public CreateModel(IUnitOfWork unitOfWork)
+        public CreateModel(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _hostEnvironment = hostEnvironment;
         }
 
         public void OnGet()
         {
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(IFormFile? file)
         {
             try
             {
@@ -41,6 +47,21 @@ namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
 
                 if(ModelState.IsValid)
                 {
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    if(file != null)
+                    {
+                        string fileName = Guid.NewGuid().ToString();
+                        var uploads = Path.Combine(wwwRootPath, @"images");
+                        var extension = Path.GetExtension(file.FileName);
+
+                        using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                        {
+                            file.CopyTo(fileStreams);
+                        };
+
+                        Mushroom.ImageUrl = @"\images\" + fileName + extension;
+                    }
+
                     _unitOfWork.Mushroom.Add(Mushroom);
                     _unitOfWork.Save();
                     _log.Information("Mushroom added");

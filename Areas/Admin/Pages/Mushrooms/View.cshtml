@@ -1,0 +1,22 @@
+﻿@page
+@model MushroomWebsite.Areas.Admin.Pages.Mushrooms.ViewModel
+
+<div class="container">
+    <div class="col-12">
+        <input hidden asp-for="Mushroom.Id" />
+        <img src="@Model.Mushroom.ImageUrl" style="max-width: 500px" class="rounded" />
+        <br />
+        <h1 class="name">@Html.DisplayFor(model => model.Mushroom.Name)</h1>
+        <br />
+        <h3>Opis</h3>
+        <p>@Html.DisplayFor(model => model.Mushroom.Description)</p>
+        <b>Poisonous: @Html.DisplayFor(model => model.Mushroom.IsPoisonous)</b>
+    </div>
+    <a class="btn" asp-page="/Mushrooms/Index">Powrót</a>
+</div>
+
+@section Scripts {
+    @{ 
+        <partial name="_ValidationScriptsPartial"/>
+    }
+}

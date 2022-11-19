@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace MushroomWebsite.Models
 {
@@ -12,11 +12,13 @@ namespace MushroomWebsite.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(512)]
+        [StringLength(1024)]
         public string Name { get; set; }
 
-        [StringLength(1024)]
         public string Description { get; set; }
         public bool IsPoisonous { get; set; }
+
+        [ValidateNever]
+        public string ImageUrl { get; set; }
     }
 }

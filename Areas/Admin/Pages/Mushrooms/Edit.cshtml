@@ -6,7 +6,7 @@
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-dark pl-3">Formularz edycji grzyba</h2>
-            <hr/>
+            <hr />
         </div>
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="mb-3">
@@ -21,6 +21,10 @@
         <div class="mb-3">
             <label asp-for="Mushroom.IsPoisonous">Czy jest trujący:</label>
             <input asp-for="Mushroom.IsPoisonous" class="form-control col-sm-1">
+        </div>
+        <div class="mb-3">
+            <label asp-for="Mushroom.ImageUrl"></label>
+            <input type="file" id="uploadBox" name="file" class="form-control" />
         </div>
         <button type="submit" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Zatwierdź</button>
         <a asp-page="Index" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Powrót</a>

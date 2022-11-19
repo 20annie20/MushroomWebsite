@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MushroomWebsite.Models;
 
 namespace MushroomWebsite.Repository.IRepository
 {
@@ -11,5 +12,6 @@ namespace MushroomWebsite.Repository.IRepository
         IUserRepository User { get; }
         IRoleRepository Role { get; }
         void Save();
+        void RegisterAndNotifyUser(User obj);
     }
 }
