@@ -62,7 +62,7 @@ namespace MushroomWebsite.Pages
                     var hashed = _hasher.HashPassword(newUser, UserData.Password);
                     newUser.PasswordHash = hashed;
 
-                    _unitOfWork.User.Add(newUser);
+                    _unitOfWork.RegisterAndNotifyUser(newUser);
                     _unitOfWork.Save();
                     return RedirectToPage("/Index");
                 }             
