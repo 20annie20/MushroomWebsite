@@ -16,37 +16,48 @@
     </div>
     <br />
 
-    <table class="table table-bordered table-striped" style="100%">
+    <table id="myTable" class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
-                <th>
-                    Nazwa
-                </th>
-                <th>
-                    Czy truje:
-                </th>
+                <th></th>
+                <th>Nazwa</th>
+                <th>Czy truje</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var obj in Model.Mushrooms)
-             {
-                <tr>
-                    <td width="40%">@obj.Name</td>
-                    <td width="20%">@obj.IsPoisonous</td>
-                    <td>
-                        <a asp-page="View" asp-route-id="@obj.Id" class="btn btn-primary mx-2 text-white;" style="background-color: #405018;">
-                            Zobacz
-                        </a>
-                        <a asp-page="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2 text-white;" style="background-color: #405018;">
-                            Zmień dane
-                        </a>
-                        <a asp-page="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2;">
-                            Usuń
-                        </a>
-                    </td>
-                </tr>
-             }
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    <script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            processing: true,
+            serverSide: true,
+            filter: true,
+            ajax: {
+                url: '/Admin/API/Mushrooms',
+                type: 'POST',
+                datatype: "json"
+            },
+            
+            columnDefs: [
+                {
+                    targets: -1,
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        return '<a href="/Admin/Mushrooms/edit?id=' + row.id + '">Edit</a> | <a href="/Admin/Mushrooms/View?id=' + row.id + '">Details</a> | <a href="/Admin/Mushrooms/delete?id=' + row.id + '">Delete</a>';
+                    },
+                    sortable: false
+                },
+                { name: "Id", data: "id", targets: 0, "visible": false },
+                { name: "Name", data: "name", targets: 1, width: "50%" },
+                { name: "IsPoisonous", data: "isPoisonous", targets: 2, width: "20%" }
+            ],
+            order: [[0, "desc"]]
+        });
+    });
+    </script>
+}

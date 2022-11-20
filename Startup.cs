@@ -65,7 +65,7 @@ namespace MushroomWebsite
 
             services.AddSession();
             
-            services.AddControllers();
+            services.AddControllersWithViews();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
             services.AddDbContext<ApplicationDbContext>(options => 
@@ -119,13 +119,13 @@ namespace MushroomWebsite
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
             
         }

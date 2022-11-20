@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MushroomWebsite.Data;
 using MushroomWebsite.Models;
+using MushroomWebsite.Repository.IRepository;
 
 namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
 {
@@ -13,16 +14,14 @@ namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
     {
 
         private readonly ApplicationDbContext _db;
-        public IEnumerable<Mushroom> Mushrooms { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        public IList<Mushroom> Mushrooms { get; set; }
 
-        public IndexModel(ApplicationDbContext db)
+        public IndexModel(ApplicationDbContext db, IUnitOfWork unitOfWork)
         {
             _db = db;
+            _unitOfWork = unitOfWork;
         }
-
-        public void OnGet()
-        {
-            Mushrooms = _db.Mushrooms;
-        }
+      
     }
 }
