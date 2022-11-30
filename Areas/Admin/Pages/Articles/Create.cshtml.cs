@@ -12,6 +12,7 @@ using System.Data;
 using MushroomWebsite.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using System.Security.Claims;
 
 
 namespace MushroomWebsite.Areas.Admin.Pages.Articles
@@ -25,7 +26,6 @@ namespace MushroomWebsite.Areas.Admin.Pages.Articles
 
         [BindProperty]
         public Entry Entry { get; set; }
-        public MushroomWebsite.Models.User Author{ get; set; }
 
         public CreateModel(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
@@ -43,7 +43,23 @@ namespace MushroomWebsite.Areas.Admin.Pages.Articles
             {
                 if(ModelState.IsValid)
                 {
-                    Entry.UserId = Author.Id;
+                    string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    MushroomWebsite.Models.User UserToUpdate = _unitOfWork.User.GetFirstOrDefault(c => c.Name.Equals(userId));
+                    if (Entry.Mushrooms == null)
+                    {
+                        Entry.Mushrooms = new List<Mushroom>();
+                    }
+                    if(Entry.UserId == 0)
+                    {
+                        Entry.UserId = UserToUpdate.Id;
+                        Entry.User = UserToUpdate;
+                    }
+                    if(UserToUpdate.Entries == null)
+                    {
+                        UserToUpdate.Entries = new List<Entry>();
+                    }
+                    UserToUpdate.Entries.Add(Entry);
+                    Entry.Article.CreatedAt = DateTime.Now;
                     _unitOfWork.Entry.Add(Entry);
                     _unitOfWork.Save();
                     _log.Information("Entry added");

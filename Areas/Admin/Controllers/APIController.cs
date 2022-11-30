@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 using MushroomWebsite.Data;
 using MushroomWebsite.Models;
 using MushroomWebsite.Repository.IRepository;
@@ -69,64 +68,4 @@ namespace MushroomWebsite.Areas.Admin.Controllers
             });
         }
     }
-
-    [Route("Admin/API/Articles")]
-    [ApiController]
-    public class APIControllerArticles : Controller
-    {
-        public IList<Entry> Entries { get; set; }
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ApplicationDbContext _db;
-
-        public APIControllerArticles(ApplicationDbContext db, IUnitOfWork unitOfWork)
-        {
-            _db = db;
-            _unitOfWork = unitOfWork;
-        }
-
-        [BindProperty]
-        public DataTables.DataTableRequest request { get; set; }
-        [HttpPost]
-
-        public IActionResult Index()
-        {
-            Entries = _unitOfWork.Entry.GetAll().ToList();
-
-            var recordsTotal = Entries.Count();
-
-            var entriesQuery = Entries.AsQueryable();
-
-            var searchText = request.Search.Value?.ToUpper();
-
-            if (!string.IsNullOrWhiteSpace(searchText))
-            {
-                entriesQuery = entriesQuery.Where(s =>
-                    s.Article.Title.ToUpper().Contains(searchText)
-                );
-            }
-
-            var recordsFiltered = entriesQuery.Count();
-
-            var sortColumnName = request.Columns.ElementAt(request.Order.ElementAt(0).Column).Name;
-            var sortDirection = request.Order.ElementAt(0).Dir.ToLower();
-
-            // using System.Linq.Dynamic.Core
-            entriesQuery = entriesQuery.OrderBy($"{sortColumnName} {sortDirection}");
-
-            var skip = request.Start;
-            var take = request.Length;
-            var data = entriesQuery
-                .Skip(skip)
-                .Take(take)
-                .ToList();
-
-            return new JsonResult(new
-            {
-                Draw = request.Draw,
-                RecordsTotal = recordsTotal,
-                RecordsFiltered = recordsFiltered,
-                Data = data
-            });
-        }
-    }
-    }
+}

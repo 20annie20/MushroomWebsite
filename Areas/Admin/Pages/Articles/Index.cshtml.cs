@@ -21,6 +21,7 @@ namespace MushroomWebsite.Areas.Admin.Pages.Articles
         {
             _db = db;
             _unitOfWork = unitOfWork;
+            Entries = (IList<Entry>)_unitOfWork.Entry.GetAll();
         }
       
     }

@@ -1,0 +1,43 @@
+﻿@page
+@model MushroomWebsite.Areas.Admin.Pages.Articles.ViewModel
+
+<div class="container">
+    <div class="col-12">
+        <h1 class="name">@Html.DisplayFor(model => model.Entry.Article.Title)</h1>
+        <i>Utworzono: @Html.DisplayFor(model => model.Entry.Article.CreatedAt)</i>
+        <h3>Autor: @Html.DisplayFor(model => model.Entry.User.Name)</h3>
+        <br />
+        <p>@Html.DisplayFor(model => model.Entry.Article.Text)</p>
+    </div>
+    <div class="card-columns">
+        @{
+            foreach (var shroom in @Model.Mushrooms)
+            {
+                <div class="card">
+                    <img src="@shroom.ImageUrl" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">@Html.DisplayFor(model => shroom.Name)</h5>
+                        <p class="card-text" style="
+                                              display:inline-block;
+                                              white-space: nowrap;
+                                              overflow: hidden;
+                                              text-overflow: ellipsis;
+                                              max-width: 10ch;">
+                            @Html.DisplayFor(model => shroom.Description)
+                        </p>
+                        <br />
+                        <b class="card-title">Trujący: @Html.DisplayFor(model => shroom.IsPoisonous)</b>
+                        <br />
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <a class="btn" asp-page="/Articles/Index">Powrót</a>
+</div>
+
+    @section Scripts {
+        @{
+            <partial name="_ValidationScriptsPartial" />
+        }
+    }
