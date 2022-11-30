@@ -20,10 +20,12 @@ namespace MushroomWebsite.Repository
             Mushroom = new MushroomRepository(_db);
             User = new UserRepository(_db);
             Role = new RoleRepository(_db);
+            Entry = new EntryRepository(_db);
         }
         public IMushroomRepository Mushroom { get; set; }
         public IUserRepository User { get; set; }
         public IRoleRepository Role { get; set; }
+        public IEntryRepository Entry { get; set; }
 
         public void RegisterAndNotifyUser(User user)
         {

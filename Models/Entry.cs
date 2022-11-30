@@ -10,6 +10,13 @@ namespace MushroomWebsite.Models
     {
         [Key]
         public int Id { get; set; }
-        //TODO add Article binding, Author binding, Mushrooms 
+
+        public int UserId { get; set; }
+        public User User { get; set; }
+         
+        public Article Article { get; set; } //moze to tez binded po id
+
+        public ICollection<Mushroom> Mushrooms { get; set; }
+
     }
 }

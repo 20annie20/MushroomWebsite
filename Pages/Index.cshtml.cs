@@ -77,7 +77,7 @@ namespace MushroomWebsite.Pages
                             if (newUser.RoleId == 1)
                             {
                                 HttpContext.Session.SetString("Token", tokenString);
-                                return RedirectToPage("/UserPanel", new { area = "Admin" });
+                                return RedirectToPage("/Articles/Index", new { area = "Admin" });
                             }
                             else if (newUser.RoleId == 2)
                             {

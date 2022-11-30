@@ -20,7 +20,7 @@ namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
     {
 
         private readonly IUnitOfWork _unitOfWork;
-        readonly ILogger _log = Log.ForContext<EditModel>();
+        readonly ILogger _log = Log.ForContext<CreateModel>();
         private readonly IWebHostEnvironment _hostEnvironment;
 
         [BindProperty]

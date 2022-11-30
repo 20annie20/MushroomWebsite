@@ -11,6 +11,7 @@ namespace MushroomWebsite.Repository.IRepository
         IMushroomRepository Mushroom { get; }
         IUserRepository User { get; }
         IRoleRepository Role { get; }
+        IEntryRepository Entry { get; }
         void Save();
         void RegisterAndNotifyUser(User obj);
     }

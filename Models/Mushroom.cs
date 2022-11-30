@@ -20,5 +20,7 @@ namespace MushroomWebsite.Models
 
         [ValidateNever]
         public string ImageUrl { get; set; }
+
+        public ICollection<Entry> Entries { get; set; }
     }
 }

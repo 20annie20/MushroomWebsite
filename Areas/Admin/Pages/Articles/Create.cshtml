@@ -1,0 +1,26 @@
+﻿@page
+@model MushroomWebsite.Areas.Admin.Pages.Articles.CreateModel
+
+<form method="post" enctype="multipart/form-data">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-dark pl-3">Dodawanie nowego wpisu</h2>
+            <hr />
+        </div>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Entry.Article.Title">Tytuł</label>
+            <input asp-for="Entry.Article.Title" class="form-control">
+            <span asp-validation-for="Entry.Article.Title" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Entry.Article.Text">Opis</label>
+            <textarea asp-for="Entry.Article.Text" class="form-control" rows="7"></textarea>
+        </div>
+        <div class="mb-3">
+            tu będzie dodawanie grzybów
+        </div>
+        <button type="submit" onclick="return ValidateInput()" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Zatwierdź</button>
+        <a asp-page="Index" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Powrót</a>
+    </div>
+</form>

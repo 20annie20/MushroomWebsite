@@ -1,0 +1,63 @@
+﻿@page
+@model MushroomWebsite.Areas.Admin.Pages.Articles.IndexModel
+@{
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2 class="text-dark">Spis grzybów</h2>
+        </div>
+        <div class="col">
+            <a asp-page="create" class="btn btn-primary text-white;" style="background-color: #405018;">
+                Dodaj nowy artykuł
+            </a>
+        </div>
+    </div>
+    <br />
+
+    <table id="myTable" class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Tytuł</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            processing: true,
+            serverSide: true,
+            filter: true,
+            ajax: {
+                url: '/Admin/API/Articles',
+                type: 'POST',
+                datatype: "json"
+            },
+            
+            columnDefs: [
+                {
+                    targets: -1,
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        return '<a href="/Admin/Articles/edit?id=' + row.id + '">Edit</a> | <a href="/Admin/Articles/View?id=' + row.id + '">Details</a> | <a href="/Admin/Articles/delete?id=' + row.id + '">Delete</a>';
+                    },
+                    sortable: false
+                },
+                { name: "Id", data: "id", targets: 0, "visible": false },
+                { name: "Title", data: "title", targets: 1, width: "20%" },
+                { name: "Text", data: "text", targets: 2, width: "60%" }
+            ],
+            order: [[0, "desc"]]
+        });
+    });
+    </script>
+}

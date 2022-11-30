@@ -16,5 +16,8 @@ namespace MushroomWebsite.Models
         [Required]
         public DateTime CreatedAt { get; set; }
         public string Text { get; set; }
+
+        public int EntryId { get; set; }
+        public Entry Entry { get; set; }
     }
 }
