@@ -13,6 +13,7 @@ using MushroomWebsite.Repository.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace MushroomWebsite.Areas.Admin.Pages.Articles
@@ -23,18 +24,27 @@ namespace MushroomWebsite.Areas.Admin.Pages.Articles
         private readonly IUnitOfWork _unitOfWork;
         readonly ILogger _log = Log.ForContext<CreateModel>();
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly ApplicationDbContext _db;
 
         [BindProperty]
         public Entry Entry { get; set; }
 
-        public CreateModel(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
+        public CreateModel(ApplicationDbContext db, IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
+            _db = db;
             _unitOfWork = unitOfWork;
             _hostEnvironment = hostEnvironment;
         }
 
+        [BindProperty]
+        public int[] SelectedMushrooms { get; set; }
+
+        public SelectList Mushrooms { get; set; }
+
         public void OnGet()
         {
+            var MushroomsList = _db.Mushrooms.ToList<Mushroom>();
+            Mushrooms = new SelectList(MushroomsList, nameof(Mushroom.Id), nameof(Mushroom.Name));
         }
 
         public async Task<IActionResult> OnPost()
@@ -45,10 +55,7 @@ namespace MushroomWebsite.Areas.Admin.Pages.Articles
                 {
                     string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                     MushroomWebsite.Models.User UserToUpdate = _unitOfWork.User.GetFirstOrDefault(c => c.Name.Equals(userId));
-                    if (Entry.Mushrooms == null)
-                    {
-                        Entry.Mushrooms = new List<Mushroom>();
-                    }
+                    
                     if(Entry.UserId == 0)
                     {
                         Entry.UserId = UserToUpdate.Id;
@@ -58,6 +65,24 @@ namespace MushroomWebsite.Areas.Admin.Pages.Articles
                     {
                         UserToUpdate.Entries = new List<Entry>();
                     }
+
+                    foreach(int i in SelectedMushrooms)
+                    {
+                        var shroom = _db.Mushrooms.FirstOrDefault(c => c.Id == i);
+                        var EntryMushroom = new EntryMushroom();
+                        EntryMushroom.Mushroom = shroom;
+                        EntryMushroom.Entry = Entry;
+                        if(Entry.EntryMushrooms == null)
+                        {
+                            Entry.EntryMushrooms = new List<EntryMushroom>();
+                        }
+                        if (shroom.EntryMushrooms == null)
+                        {
+                            shroom.EntryMushrooms = new List<EntryMushroom>();
+                        }
+                        _db.EntryMushrooms.Add(EntryMushroom);
+                    }
+                    
                     UserToUpdate.Entries.Add(Entry);
                     Entry.Article.CreatedAt = DateTime.Now;
                     _unitOfWork.Entry.Add(Entry);

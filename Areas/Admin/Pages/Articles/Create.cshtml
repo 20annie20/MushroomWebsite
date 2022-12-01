@@ -17,9 +17,15 @@
             <label asp-for="Entry.Article.Text">Opis</label>
             <textarea asp-for="Entry.Article.Text" class="form-control" rows="7"></textarea>
         </div>
-        <div class="mb-3">
-            tu będzie dodawanie grzybów
-        </div>
+        <select asp-for="SelectedMushrooms" asp-items="Model.Mushrooms" multiple="multiple">
+            @{
+                foreach (var shroom in @Model.Mushrooms)
+                {
+                    <option value="@shroom.Value">@shroom.Text</option>
+                    }
+                }
+        </select>
+
         <button type="submit" onclick="return ValidateInput()" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Zatwierdź</button>
         <a asp-page="Index" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Powrót</a>
     </div>

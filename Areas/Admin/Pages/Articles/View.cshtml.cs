@@ -9,6 +9,7 @@ using MushroomWebsite.Data;
 using Serilog;
 using System.Data;
 using MushroomWebsite.Repository.IRepository;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MushroomWebsite.Areas.Admin.Pages.Articles
 {
@@ -27,7 +28,6 @@ namespace MushroomWebsite.Areas.Admin.Pages.Articles
         {
             _unitOfWork = unitOfWork;
             _db = db;
-            Mushrooms = new List<Mushroom>();
         }
 
         public void OnGet(int id)
@@ -40,8 +40,7 @@ namespace MushroomWebsite.Areas.Admin.Pages.Articles
                 IQueryable<Article> queryArticle = _db.Set<Article>();
                 Entry.Article = queryArticle.FirstOrDefault(u => u.EntryId == Entry.Id);
 
-                if(Entry.Mushrooms != null)
-                    Mushrooms = (IList<Mushroom>)Entry.Mushrooms;
+                Mushrooms = _db.EntryMushrooms.Where(s => s.EntryId == Entry.Id).Select(c => c.Mushroom).ToList();
             }
             catch (Exception ex)
             {

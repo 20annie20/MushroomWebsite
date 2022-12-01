@@ -21,6 +21,6 @@ namespace MushroomWebsite.Models
         [ValidateNever]
         public string ImageUrl { get; set; }
 
-        public ICollection<Entry> Entries { get; set; }
+        public ICollection<EntryMushroom> EntryMushrooms { get; set; }
     }
 }

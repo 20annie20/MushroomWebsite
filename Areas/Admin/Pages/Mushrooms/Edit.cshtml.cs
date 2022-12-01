@@ -9,6 +9,9 @@ using MushroomWebsite.Data;
 using Serilog;
 using System.Data;
 using MushroomWebsite.Repository.IRepository;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 
 namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
 {
@@ -17,13 +20,15 @@ namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
 
         private readonly IUnitOfWork _unitOfWork;
         readonly ILogger _log = Log.ForContext<EditModel>();
+        private readonly IWebHostEnvironment _hostEnvironment;
 
         [BindProperty]
         public Mushroom Mushroom { get; set; }
 
-        public EditModel(IUnitOfWork unitOfWork)
+        public EditModel(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _hostEnvironment = hostEnvironment;
         }
 
         public void OnGet(int id)
@@ -39,12 +44,33 @@ namespace MushroomWebsite.Areas.Admin.Pages.Mushrooms
             
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(IFormFile? fileu)
         {
             try
             {
-                if(ModelState.IsValid)
+                if (_unitOfWork.Mushroom.GetAll().Any(contact => contact.Name.Equals(Mushroom.Name)))
                 {
+                    ;
+                }
+
+
+                if (ModelState.IsValid)
+                {
+                    string wwwRootPath = _hostEnvironment.WebRootPath;
+                    if (fileu != null)
+                    {
+                        string fileName = Guid.NewGuid().ToString();
+                        var uploads = Path.Combine(wwwRootPath, @"images");
+                        var extension = Path.GetExtension(fileu.FileName);
+
+                        using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                        {
+                            fileu.CopyTo(fileStreams);
+                        };
+
+                        Mushroom.ImageUrl = @"\images\" + fileName + extension;
+                    }
+
                     _unitOfWork.Mushroom.Update(Mushroom);
                     _unitOfWork.Save();
                     _log.Information("Mushroom updated");

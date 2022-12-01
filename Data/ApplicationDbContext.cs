@@ -13,6 +13,8 @@ namespace MushroomWebsite.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Entry> Entries { get; set; }
 
+        public DbSet<EntryMushroom> EntryMushrooms { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
@@ -28,9 +30,20 @@ namespace MushroomWebsite.Data
             modelBuilder.Entity<User>().Property(c => c.Email).IsRequired();
             modelBuilder.Entity<User>().Property(c => c.Name).IsRequired();
             modelBuilder.Entity<User>().Property(c => c.PasswordHash).IsRequired();
-           // modelBuilder.Entity<User>().HasOne(a => a.Role);
             modelBuilder.Entity<Role>().Property(c => c.Name).IsRequired();
             modelBuilder.Entity<Mushroom>().Property(c => c.Name).IsRequired();
+
+            modelBuilder.Entity<EntryMushroom>()
+                .HasKey(em => new { em.EntryId, em.MushroomId });
+            modelBuilder.Entity<EntryMushroom>()
+                .HasOne(em => em.Entry)
+                .WithMany(e => e.EntryMushrooms)
+                .HasForeignKey(em => em.EntryId);
+            modelBuilder.Entity<EntryMushroom>()
+                .HasOne(em => em.Mushroom)
+                .WithMany(m => m.EntryMushrooms)
+                .HasForeignKey(em => em.MushroomId);
+
         }
     }
 }

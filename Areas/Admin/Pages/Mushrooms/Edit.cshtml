@@ -2,7 +2,7 @@
 @model MushroomWebsite.Areas.Admin.Pages.Mushrooms.EditModel
 
 <form method="post">
-    <input hidden asp-for="Mushroom.Id"/>
+    <input hidden asp-for="Mushroom.Id" />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-dark pl-3">Formularz edycji grzyba</h2>
@@ -24,15 +24,29 @@
         </div>
         <div class="mb-3">
             <label asp-for="Mushroom.ImageUrl"></label>
-            <input type="file" id="uploadBox" name="file" class="form-control" />
+            <input type="file" id="uploadB" name="fileu" class="form-control" />
         </div>
-        <button type="submit" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Zatwierdź</button>
+        <button type="submit" onclick="return ValidateInput()" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Zatwierdź</button>
         <a asp-page="Index" class="btn btn-primary text-white" style="width: 150px; background-color: #405018;">Powrót</a>
     </div>
 </form>
 
 @section Scripts {
-    @{ 
-        <partial name="_ValidationScriptsPartial"/>
+    @{
+        <partial name="_ValidationScriptsPartial" />
+
+        <script>
+            function ValidateInput() {
+                if (document.getElementById("uploadB").value == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Dodaj zdjęcie'
+                    });
+                    return false;
+                }
+                return true;
+            }
+        </script>
     }
 }

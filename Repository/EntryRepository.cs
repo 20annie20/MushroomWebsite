@@ -39,8 +39,6 @@ namespace MushroomWebsite.Repository
                 
                 var Article = queryArticle.FirstOrDefault(c => c.EntryId == s.Id);
                 var User = queryUser.FirstOrDefault(c => c.Id == s.UserId);
-                //s.Article = Article;
-                //s.User = User;
             }
 
             return Entries;

@@ -14,9 +14,17 @@ namespace MushroomWebsite.Models
         public int UserId { get; set; }
         public User User { get; set; }
          
-        public Article Article { get; set; } //moze to tez binded po id
+        public Article Article { get; set; }
 
-        public ICollection<Mushroom> Mushrooms { get; set; }
+        public ICollection<EntryMushroom> EntryMushrooms { get; set; }
 
+    }
+
+    public class EntryMushroom
+    {
+        public int EntryId { get; set; }
+        public Entry Entry { get; set; }
+        public int MushroomId { get; set; }
+        public Mushroom Mushroom { get; set; }
     }
 }
